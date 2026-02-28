@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skindle — Your Personalized Skincare Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf8f4;
+    --blush: #f5e6de;
+    --rose: #e8b4a0;
+    --terracotta: #c97d5e;
+    --deep: #3d2c25;
+    --sage: #a8b89a;
+    --lavender: #d4c8e8;
+    --text: #4a3728;
+    --muted: #9e8a7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 60px;
+    background: rgba(253,248,244,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232,180,160,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--terracotta);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--deep); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--terracotta); }
+
+  .nav-cta {
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-cta:hover {
+    background: var(--deep);
+    transform: translateY(-1px);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(232,180,160,0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -150px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(212,200,232,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    flex: 1;
+    max-width: 520px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(232,180,160,0.2);
+    border: 1px solid rgba(201,125,94,0.3);
+    color: var(--terracotta);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .hero-badge::before { content: '✦'; font-size: 0.6rem; }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4rem);
+    line-height: 1.1;
+    font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 20px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    font-weight: 300;
+    max-width: 420px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--terracotta);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover { background: var(--deep); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,125,94,0.3); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: none;
+    padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--terracotta); }
+
+  .play-icon {
+    width: 32px; height: 32px;
+    background: var(--deep);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+  }
+
+  /* CHAT PREVIEW */
+  .hero-visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .chat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    width: 340px;
+    box-shadow: 0 20px 60px rgba(61,44,37,0.12);
+    position: relative;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--blush);
+  }
+
+  .chat-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--rose), var(--terracotta));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  .chat-title { font-weight: 600; font-size: 0.875rem; color: var(--deep); }
+  .chat-status { font-size: 0.75rem; color: var(--sage); display: flex; align-items: center; gap: 4px; }
+  .chat-status::before { content: '●'; font-size: 0.5rem; }
+
+  .chat-msg {
+    margin-bottom: 12px;
+    display: flex;
+    gap: 8px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .chat-msg.user { justify-content: flex-end; }
+
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 0.825rem;
+    line-height: 1.5;
+    max-width: 220px;
+  }
+
+  .msg-bubble.ai {
+    background: var(--blush);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+  }
+
+  .msg-bubble.user-msg {
+    background: var(--terracotta);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+
+  .chat-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--cream);
+    border-radius: 50px;
+    padding: 10px 16px;
+    margin-top: 16px;
+  }
+
+  .chat-input input {
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.825rem;
+    color: var(--text);
+    flex: 1;
+    outline: none;
+  }
+
+  .chat-input button {
+    background: var(--terracotta);
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .floating-badge {
+    position: absolute;
+    top: -12px; right: -12px;
+    background: var(--sage);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* STATS */
+  .stats {
+    background: var(--deep);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+  }
+
+  .stat {
+    text-align: center;
+    color: white;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--rose);
+    display: block;
+  }
+
+  .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* SECTIONS */
+  section { padding: 100px 60px; }
+
+  .section-label {
+    display: inline-block;
+    color: var(--terracotta);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    color: var(--deep);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 60px;
+    font-weight: 300;
+  }
+
+  .text-center { text-align: center; }
+
+  /* HOW IT WORKS */
+  .how-it-works { background: var(--cream); }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .step-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid rgba(232,180,160,0.2);
+  }
+
+  .step-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(61,44,37,0.1);
+  }
+
+  .step-num {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--rose), var(--terracotta));
+    border-radius: 50%;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .step-icon { font-size: 1.8rem; margin-bottom: 14px; }
+  .step-title { font-weight: 600; font-size: 1rem; color: var(--deep); margin-bottom: 10px; }
+  .step-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+  /* FEATURES */
+  .features { background: var(--blush); }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 24px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(61,44,37,0.1);
+  }
+
+  .feature-icon { font-size: 1.6rem; margin-bottom: 14px; }
+  .feature-title { font-weight: 600; font-size: 0.95rem; color: var(--deep); margin-bottom: 8px; }
+  .feature-desc { font-size: 0.825rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+  /* DEMO */
+  .demo-section {
+    background: linear-gradient(135deg, #f9f2ff 0%, #fde8e0 50%, #e8f4f0 100%);
+    text-align: center;
+  }
+
+  .demo-window {
+    max-width: 680px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 24px 80px rgba(61,44,37,0.14);
+    overflow: hidden;
+  }
+
+  .demo-topbar {
+    background: linear-gradient(90deg, var(--terracotta), #c88a6e);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+  }
+
+  .demo-brand { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 1rem; }
+
+  .demo-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--blush);
+    overflow-x: auto;
+  }
+
+  .demo-tab {
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+
+  .demo-tab.active {
+    background: var(--terracotta);
+    color: white;
+  }
+
+  .demo-tab:not(.active):hover { background: var(--blush); color: var(--text); }
+
+  .demo-body {
+    padding: 24px;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .demo-chat-msg {
+    display: flex;
+    gap: 10px;
+    max-width: 460px;
+  }
+
+  .demo-chat-msg.right {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .demo-avatar {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose), var(--terracotta));
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+  }
+
+  .demo-bubble {
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.825rem;
+    line-height: 1.5;
+  }
+
+  .demo-bubble.ai-b { background: var(--blush); color: var(--text); }
+  .demo-bubble.user-b { background: var(--terracotta); color: white; }
+
+  .demo-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--blush);
+  }
+
+  .demo-input {
+    flex: 1;
+    border: none;
+    background: var(--cream);
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.825rem;
+    outline: none;
+    color: var(--text);
+  }
+
+  .demo-send {
+    width: 36px; height: 36px;
+    background: var(--terracotta);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .demo-send:hover { background: var(--deep); transform: scale(1.05); }
+
+  /* SKIN TYPES */
+  .skin-types { background: var(--cream); text-align: center; }
+
+  .skin-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 840px;
+    margin: 0 auto;
+  }
+
+  .skin-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+  }
+
+  .skin-card:hover {
+    border-color: var(--terracotta);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(201,125,94,0.15);
+  }
+
+  .skin-emoji { font-size: 2rem; margin-bottom: 12px; }
+  .skin-name { font-weight: 600; font-size: 0.95rem; color: var(--deep); margin-bottom: 8px; }
+  .skin-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; font-weight: 300; }
+
+  /* ARTICLES */
+  .articles { background: var(--blush); }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .article-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .article-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(61,44,37,0.12);
+  }
+
+  .article-thumb {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+  }
+
+  .article-thumb.peach { background: linear-gradient(135deg, #fde8d8, #f5c4a8); }
+  .article-thumb.lavender { background: linear-gradient(135deg, #ede0f8, #d4c8e8); }
+  .article-thumb.mint { background: linear-gradient(135deg, #d8f4ec, #b8e8d8); }
+
+  .article-body { padding: 20px; }
+  .article-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .tag-basics { background: rgba(232,180,160,0.3); color: var(--terracotta); }
+  .tag-advanced { background: rgba(212,200,232,0.4); color: #7a5fa8; }
+  .tag-tips { background: rgba(168,184,154,0.3); color: #5a7a4a; }
+
+  .article-title { font-weight: 600; font-size: 0.95rem; color: var(--deep); margin-bottom: 8px; line-height: 1.4; }
+  .article-excerpt { font-size: 0.8rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+  .article-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--terracotta);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .article-link:hover { text-decoration: underline; }
+
+  /* FOOTER */
+  footer {
+    background: var(--deep);
+    color: rgba(255,255,255,0.5);
+    padding: 40px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: white;
+  }
+
+  .footer-logo span { color: var(--rose); }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 0.825rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: white; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { flex-direction: column; padding: 100px 24px 60px; text-align: center; }
+    .hero-buttons { justify-content: center; }
+    .hero-visual { margin-top: 40px; }
+    .stats { gap: 40px; padding: 40px 24px; flex-wrap: wrap; }
+    section { padding: 70px 24px; }
+    .steps-grid, .features-grid, .skin-grid, .articles-grid { grid-template-columns: 1fr; max-width: 400px; }
+    .skin-grid { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Skindle<span>.ai</span></div>
+  <ul class="nav-links">
+    <li><a href="#">How It Works</a></li>
+    <li><a href="#">Chat Now</a></li>
+    <li><a href="#">Learn</a></li>
+    <li><a href="#">About</a></li>
+  </ul>
+  <button class="nav-cta">Try Free</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">AI-Powered Skincare Advisor</div>
+    <h1>Your <em>Personalized</em> Skincare Assistant</h1>
+    <p class="hero-sub">Get expert-level guidance tailored to your skin's unique needs. Science-backed advice, personalized routines, and honest product recommendations — all in one place.</p>
+    <div class="hero-buttons">
+      <button class="btn-primary">✦ Chat Now — It's Free</button>
+      <button class="btn-secondary">
+        <span class="play-icon">▶</span>
+        See How It Works
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="chat-card">
+      <div class="floating-badge">Science-backed</div>
+      <div class="chat-header">
+        <div class="chat-avatar">🌿</div>
+        <div>
+          <div class="chat-title">Skindle — Skincare AI</div>
+          <div class="chat-status">Online now</div>
+        </div>
+      </div>
+      <div class="chat-msg">
+        <div class="msg-bubble ai">Hi! I'm Skindle, your personal skincare guide. What's your main skin concern today? 🌸</div>
+      </div>
+      <div class="chat-msg user">
+        <div class="msg-bubble user-msg">I have oily skin and keep getting breakouts.</div>
+      </div>
+      <div class="chat-msg">
+        <div class="msg-bubble ai">Got it! Oily, acne-prone skin benefits most from a gentle, non-comedogenic routine. Let me build you a personalized plan...</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" placeholder="Ask me about your skin...">
+        <button>→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <span class="stat-num">10K+</span>
+    <div class="stat-label">Skin profiles analyzed</div>
+  </div>
+  <div class="stat">
+    <span class="stat-num">95%</span>
+    <div class="stat-label">User satisfaction rate</div>
+  </div>
+  <div class="stat">
+    <span class="stat-num">500+</span>
+    <div class="stat-label">Products in our database</div>
+  </div>
+  <div class="stat">
+    <span class="stat-num">4</span>
+    <div class="stat-label">Adaptive personality styles</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works text-center">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Smart Skincare in 3 Simple Steps</h2>
+  <p class="section-sub">Our AI adapts to your communication style and skin needs for a truly personalized experience.</p>
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num">1</div>
+      <div class="step-icon">💬</div>
+      <div class="step-title">Tell Us About Your Skin</div>
+      <p class="step-desc">Share your concerns, goals, skin type, current routine, or any specific problems you're dealing with. No question is too basic or too complex.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">2</div>
+      <div class="step-icon">🧠</div>
+      <div class="step-title">AI Analyzes & Adapts</div>
+      <p class="step-desc">Our AI detects your communication style — analytical, inquisitive, decisive, or gossip-focused — and calibrates the depth and tone of every response.</p>
+    </div>
+    <div class="step-card reveal">
+      <div class="step-num">3</div>
+      <div class="step-icon">✨</div>
+      <div class="step-title">Get Your Personalized Plan</div>
+      <p class="step-desc">Receive science-backed routines, product picks, and ingredient guides — all precisely matched to your skin type, concerns, and budget.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features text-center">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything Your Skin Needs</h2>
+  <p class="section-sub">Comprehensive tools and guidance designed to make great skincare accessible to everyone.</p>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">🎨</div>
+      <div class="feature-title">Adaptive Communication</div>
+      <p class="feature-desc">The AI detects if you're detail-oriented, decisive, scientific, or people-focused and adjusts its tone and depth accordingly — every time.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔬</div>
+      <div class="feature-title">Ingredient Deep-Dives</div>
+      <p class="feature-desc">Get clinical data, pro-cons, concentration recommendations, and ingredient compatibility checks for every product and active you're curious about.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">💰</div>
+      <div class="feature-title">Budget-Friendly Options</div>
+      <p class="feature-desc">Recommendations across all price ranges — from drugstore heroes to premium picks — personalized to your budget and goals.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🧴</div>
+      <div class="feature-title">Product Compatibility Check</div>
+      <p class="feature-desc">Find out if your current products work well together and get guidance on how to introduce new actives safely without irritation.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🌅</div>
+      <div class="feature-title">AM & PM Routine Builder</div>
+      <p class="feature-desc">Build a complete morning and evening routine with the right products in the right order for maximum effectiveness and safety.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🩺</div>
+      <div class="feature-title">Dermatology-Based Advice</div>
+      <p class="feature-desc">All recommendations are grounded in dermatological science and the latest peer-reviewed research — never just beauty trends.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section">
+  <div class="section-label">AI Chat</div>
+  <h2 class="section-title">Meet Skindle, Your Skincare Guide</h2>
+  <p class="section-sub">Ask anything about your skin. Skindle adapts to how you communicate and gives you exactly what you need — whether that's data, detail, speed, or warm help.</p>
+  <div class="demo-window reveal">
+    <div class="demo-topbar">
+      <div class="demo-brand">🌿 Skindle — Skincare AI</div>
+      <div style="font-size:0.75rem; opacity:0.8;">● Online</div>
+    </div>
+    <div class="demo-tabs">
+      <div class="demo-tab active">Find my skin type</div>
+      <div class="demo-tab">Fix breakouts</div>
+      <div class="demo-tab">Build routine</div>
+      <div class="demo-tab">Budget picks</div>
+      <div class="demo-tab">Rated guide</div>
+    </div>
+    <div class="demo-body" id="demoBody">
+      <div class="demo-chat-msg">
+        <div class="demo-avatar">🌿</div>
+        <div class="demo-bubble ai-b">Hi! Tell me about your skin — what's your biggest concern right now?</div>
+      </div>
+      <div class="demo-chat-msg right">
+        <div class="demo-avatar" style="background: var(--terracotta); color:white;">You</div>
+        <div class="demo-bubble user-b">I get dry skin in winter but oily in summer, especially on my T-zone.</div>
+      </div>
+      <div class="demo-chat-msg">
+        <div class="demo-avatar">🌿</div>
+        <div class="demo-bubble ai-b">That sounds like combination skin that's also season-reactive! I'll create a flexible routine you can adapt throughout the year...</div>
+      </div>
+    </div>
+    <div class="demo-input-bar">
+      <input class="demo-input" type="text" id="demoInput" placeholder="Ask Skindle about your skin...">
+      <button class="demo-send" onclick="sendDemo()">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- SKIN TYPES -->
+<section class="skin-types">
+  <div class="section-label">Skin Types</div>
+  <h2 class="section-title">Know Your Skin</h2>
+  <p class="section-sub">Understanding your skin type is the first step to a great routine. Click any card to ask Skindle about it.</p>
+  <div class="skin-grid">
+    <div class="skin-card reveal">
+      <div class="skin-emoji">💧</div>
+      <div class="skin-name">Oily Skin</div>
+      <p class="skin-desc">Prone to shine, enlarged pores, and breakouts. Needs balance and control without over-stripping.</p>
+    </div>
+    <div class="skin-card reveal">
+      <div class="skin-emoji">🌵</div>
+      <div class="skin-name">Dry Skin</div>
+      <p class="skin-desc">Tends to feel tight or flaky. Needs deep hydration and barrier-supporting ingredients.</p>
+    </div>
+    <div class="skin-card reveal">
+      <div class="skin-emoji">☯️</div>
+      <div class="skin-name">Combination Skin</div>
+      <p class="skin-desc">Oily in the T-zone, dry on the cheeks. Requires zone-specific care strategies.</p>
+    </div>
+    <div class="skin-card reveal">
+      <div class="skin-emoji">🌸</div>
+      <div class="skin-name">Sensitive Skin</div>
+      <p class="skin-desc">Easily irritated, prone to redness. Avoid harsh actives, fragrances, and high concentrations.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="articles text-center">
+  <div class="section-label">Skincare 101</div>
+  <h2 class="section-title">Learn & Level Up</h2>
+  <p class="section-sub">Science-backed articles and guides to help you understand your skin better. Click to ask Skindle about any topic.</p>
+  <div class="articles-grid">
+    <div class="article-card reveal">
+      <div class="article-thumb peach">🔬</div>
+      <div class="article-body">
+        <span class="article-tag tag-basics">Basics</span>
+        <div class="article-title">The Science Behind Breakouts</div>
+        <p class="article-excerpt">Understand why acne forms — from excess sebum to bacteria — and how to choose the most effective, science-based treatments.</p>
+        <a href="#" class="article-link">Ask Skindle about this →</a>
+      </div>
+    </div>
+    <div class="article-card reveal">
+      <div class="article-thumb lavender">📋</div>
+      <div class="article-body">
+        <span class="article-tag tag-advanced">Advanced</span>
+        <div class="article-title">Retinol 101: Everything You Need to Know</div>
+        <p class="article-excerpt">A complete explainer on retinol — from how it works deep in the skin to practical tips on avoiding irritation while building tolerance.</p>
+        <a href="#" class="article-link">Ask Skindle about this →</a>
+      </div>
+    </div>
+    <div class="article-card reveal">
+      <div class="article-thumb mint">☀️</div>
+      <div class="article-body">
+        <span class="article-tag tag-tips">Tips</span>
+        <div class="article-title">How to Fade Dark Spots & Hyperpigmentation</div>
+        <p class="article-excerpt">Vitamin C, kojic acid, AHAs — the ingredients that genuinely work, in what order to layer them, and how to track effectiveness.</p>
+        <a href="#" class="article-link">Ask Skindle about this →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Skindle<span>.ai</span></div>
+  <ul class="footer-links">
+    <li><a href="#">How It Works</a></li>
+    <li><a href="#">Chat Now</a></li>
+    <li><a href="#">Learn</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Privacy</a></li>
+  </ul>
+  <div style="font-size:0.75rem;">© 2026 Skindle.AI — All rights reserved</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Demo chat
+  const aiResponses = [
+    "Great question! Based on what you've shared, I'd recommend starting with a gentle cleanser and a lightweight moisturizer. Let me know more about your current routine.",
+    "For that concern, Niacinamide at 5-10% concentration would be a fantastic addition to your routine. It helps regulate sebum and reduces redness.",
+    "I love that you're thinking about this! Layering actives can be tricky — here's what I recommend for your specific combination...",
+    "Your skin sounds like it needs extra barrier support right now. Look for ceramides, hyaluronic acid, and squalane in your moisturizer.",
+    "That's a common concern! The key is consistency — most actives take 6–8 weeks of daily use to show measurable results."
+  ];
+  let responseIndex = 0;
+
+  function sendDemo() {
+    const input = document.getElementById('demoInput');
+    const body = document.getElementById('demoBody');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    const userMsg = document.createElement('div');
+    userMsg.className = 'demo-chat-msg right';
+    userMsg.innerHTML = `<div class="demo-avatar" style="background:var(--terracotta);color:white;">You</div><div class="demo-bubble user-b">${msg}</div>`;
+    body.appendChild(userMsg);
+
+    setTimeout(() => {
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'demo-chat-msg';
+      aiMsg.innerHTML = `<div class="demo-avatar">🌿</div><div class="demo-bubble ai-b">${aiResponses[responseIndex % aiResponses.length]}</div>`;
+      body.appendChild(aiMsg);
+      responseIndex++;
+      body.scrollTop = body.scrollHeight;
+    }, 700);
+
+    input.value = '';
+    body.scrollTop = body.scrollHeight;
+  }
+
+  document.getElementById('demoInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendDemo();
+  });
+
+  // Tab switching
+  document.querySelectorAll('.demo-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
